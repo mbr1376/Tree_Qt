@@ -1,0 +1,526 @@
+<!--  html file display tree-->
+  <!DOCTYPE html>
+  <html lang="en">
+  <script type="text/javascript" src="qrc:/qwebchannel.js"></script>
+  <script src="qrc:/go.js"></script>
+  <script src="qrc:/jquery-3.6.0.min.js"></script>
+  <div id="allSampleContent" class="p-4 w-full">
+
+  <script id="code">
+  //alert(backgrand)
+var fileobject;
+    function init() {
+      // Since 2.2 you can also author concise templates with method chaining instead of GraphObject.make
+      // For details, see https://gojs.net/latest/intro/buildingObjects.html
+      const $ = go.GraphObject.make;  // for conciseness in defining templates
+
+
+      myFullDiagram =
+        $(go.Diagram, "myDiagramDiv", // must be the ID or reference to div
+          {
+          initialDocumentSpot: go.Spot.Top,
+          initialViewportSpot: go.Spot.Top,
+            maxSelectionCount: 5, // users can select only one part at a time
+            layout:
+              $(go.TreeLayout,
+                {
+
+                  treeStyle: go.TreeLayout.StyleLastParents,
+                  arrangement: go.TreeLayout.ArrangementHorizontal,
+                  // properties for most of the tree:
+                  angle: 90,
+                  layerSpacing: 35,
+                  // properties for the "last parents":
+                  alternateAngle: 90,
+                  alternateLayerSpacing: 35,
+                  alternateAlignment: go.TreeLayout.AlignmentBus,
+                  alternatePortSpot :new go.Spot(0.8,255,10,0),
+                  alternateNodeSpacing: 20
+
+                }),
+           "undoManager.isEnabled": true // enable undo & redo
+
+          });
+
+
+
+      var pinkgrad = $(go.Brush, "Linear", { 0: "rgb(255, 0, 0)", 1: "rgb(255, 0, 0)" });
+      function genderWidthConverter(type) {
+             if (type === null) return 400;
+             return 90;
+            }
+      // manage boss info manually when a node or link is deleted from the diagram
+      myFullDiagram.addDiagramListener("SelectionDeleting", e => {
+        var part = e.subject.first(); // e.subject is the myDiagram.selection collection,
+        // so we'll get the first since we know we only have one selection
+        myFullDiagram.startTransaction("clear boss");
+        if (part instanceof go.Node) {
+          var it = part.findTreeChildrenNodes(); // find all child nodes
+          while (it.next()) { // now iterate through them and clear out the boss information
+            var child = it.value;
+            var bossText = child.findObject("boss"); // since the boss TextBlock is named, we can access it by name
+            if (bossText === null) return;
+            bossText.text = "";
+          }
+        } else if (part instanceof go.Link) {
+          var child = part.toNode;
+          var bossText = child.findObject("boss"); // since the boss TextBlock is named, we can access it by name
+          if (bossText === null) return;
+          bossText.text = "";
+        }
+        myFullDiagram.commitTransaction("clear boss");
+      });
+
+
+function tooltipTextConverter(person) {
+       var str = "";
+       if (person.parent !== undefined){
+       var boss = myFullDiagram.model.findNodeDataForKey(person.parent);
+       str += "\nParent: " + boss.name;
+       }
+       else str += "\nParent: " +"root";
+       if (person.name !== undefined) str += "\nName: " + person.name;
+       return str;
+     }
+
+     // define tooltips for nodes
+     var tooltiptemplate =
+       $("ToolTip",
+         { "Border.fill": "whitesmoke", "Border.stroke": "black" },
+         $(go.TextBlock,
+           {
+             font: "bold 10pt Helvetica, bold Arial, sans-serif",
+             wrap: go.TextBlock.WrapFit,
+             margin: 5
+           },
+           new go.Binding("text", "", tooltipTextConverter))
+       );
+
+
+      // This function provides a common style for most of the TextBlocks.
+      // Some of these values may be overridden in a particular TextBlock.
+      function textStyle() {
+        return { font: "10pt  Segoe UI,sans-serif", stroke: "black" };
+      }
+
+      // This converter is used by the Picture.
+      function findHeadShot(type) {
+        return "qrc:/image/Radar" + type + ".jpg";
+      }
+
+       function mayWorkFor(node1 , node2){
+            if (!(node1 instanceof go.Node)) return false;
+            if (node1===node2) return false;
+            if (node2.isInTreeof(node1)) return false;
+            return true
+        }
+      // define the Node template
+       var nodeTemplate =
+        $(go.Node, "Auto",
+          { // handle dragging a Node onto a Node to (maybe) change the reporting relationship
+          mouseDragEnter: (e, node, prev) => {
+                        var diagram = node.diagram;
+                        var selnode = diagram.selection.first();
+                        if (!mayWorkFor(selnode, node)) return;
+                        var shape = node.findObject("SHAPE");
+                        if (shape) shape.fill = "darkred";
+                      },
+                      mouseDragLeave: (e, node, next) => {
+                        var shape = node.findObject("SHAPE");
+                        if (shape) shape.fill = graygrad;
+                      },
+                      mouseDrop: (e, node) => {
+                        var diagram = node.diagram;
+                        var selnode = diagram.selection.first();  // assume just one Node in selection
+                        if (mayWorkFor(selnode, node)) {
+                          // find any existing link into the selected node
+                          var link = selnode.findTreeParentLink();
+                          if (link !== null) {  // reconnect any existing link
+                            link.fromNode = node;
+                          } else {  // else create a new link
+                            diagram.toolManager.linkingTool.insertLink(node, node.port, selnode, selnode.port);
+                          }
+                        }
+                      }
+          },
+          // for sorting, have the Node.text be the data.name
+          { deletable: false, toolTip: tooltiptemplate },
+          new go.Binding("text", "name"),
+          // bind the Part.layerName to control the Node's layer depending on whether it isSelected
+          new go.Binding("layerName", "isSelected", sel => sel ? "Foreground" : "").ofObject(),
+          // define the node's outer shape
+          $(go.Shape, "RoundedRectangle",
+            {
+                height: 80,
+                width :80,
+              name: "SHAPE", fill: pinkgrad, stroke: 'white', strokeWidth: 2,
+              // set the port properties:
+              portId: "" ,cursor: "pointer"
+            },
+            new go.Binding("stroke","colorborder"),
+            new go.Binding("strokeWidth","isHighlighted",h=>h ? 2 : 2).ofObject(),
+            //new go.Binding("height","type",genderWidthConverter),
+             new go.Binding("fill", "color")),
+
+          $(go.Panel, "Vertical",
+          $(go.TextBlock, textStyle(),  // the name
+                          {
+                            row: 0, column: 0, columnSpan: 5,
+                            font: "7pt Segoe UI,sans-serif",
+                             isMultiline: true,
+                            minSize: new go.Size(10, 10),
+                          },
+                          new go.Binding("text", "name").makeTwoWay()),
+            $(go.Picture,
+              {
+                name: "Picture",
+                desiredSize: new go.Size(50, 50),
+                margin: 0.1,
+                source :"qrc:/image/not_image.png"
+              },
+              new go.Binding("source", "type", findHeadShot)),
+
+
+
+            ), // end Horizontal Panel
+             $("TreeExpanderButton",
+             {
+                     // set the two additional properties used by "TreeExpanderButton"
+                     // that control the shape depending on the value of Node.isTreeExpanded
+                     "_treeExpandedFigure": "TriangleUp",
+                     "_treeCollapsedFigure": "TriangleDown",
+                     // set properties on the icon within the border
+                     "ButtonIcon.fill": "darkcyan",
+                     "ButtonIcon.strokeWidth": 0,
+                     // set general "Button" properties
+                     "ButtonBorder.figure": "Circle",
+                     "ButtonBorder.stroke": "darkcyan",
+                     "_buttonStrokeOver": "darkcyan"
+                   },
+            {alignment :go.Spot.Bottom},
+            { visible: false }
+            )
+        );  // end Node
+
+        myFullDiagram.nodeTemplate = nodeTemplate;
+        ////////////////////////////////
+
+      // the context menu allows users to make a position vacant,
+      // remove a role and reassign the subtree, or remove a department
+      myFullDiagram.nodeTemplate.contextMenu =
+        $("ContextMenu",
+          $("ContextMenuButton",
+            $(go.TextBlock, "Name parent"),
+            {
+              click: (e, obj) => {
+                var node = obj.part.adornedPart;
+                if (node !== null) {
+                  var thisemp = node.data;
+                  myFullDiagram.startTransaction("vacate");
+                  var boss = myFullDiagram.model.findNodeDataForKey(thisemp.parent);
+                  fileobject.getParent(boss.name)
+                }
+              }
+            }
+          ),
+          $("ContextMenuButton",
+            $(go.TextBlock, "Childeren"),
+            {
+              click: (e, obj) => {
+                // reparent the subtree to this node's boss, then remove the node
+                var node = obj.part.adornedPart;
+                if (node !== null) {
+                  myFullDiagram.startTransaction("reparent remove");
+                  var chl = node.findTreeChildrenNodes();
+                  // iterate through the children and set their parent key to our selected node's parent key
+                   let i=0;
+                   var childparent=[]
+                   while (chl.next()) {
+                    var emp = chl.value;
+                     childparent[i]=emp.data.name;
+                       i++;
+                    }
+                    fileobject.getChilderen(childparent)
+                }
+              }
+            }
+          ),
+          $("ContextMenuButton",
+            $(go.TextBlock, "Remove Department"),
+            {
+              click: (e, obj) => {
+                // remove the whole subtree, including the node itself
+                var node = obj.part.adornedPart;
+                if (node !== null) {
+                  myFullDiagram.startTransaction("remove dept");
+                  myFullDiagram.removeParts(node.findTreeParts());
+                  myFullDiagram.commitTransaction("remove dept");
+                }
+              }
+            }
+          )
+        );
+        ////////////////////////////////
+
+// also define a context menu for the diagram's background
+myFullDiagram.contextMenu =
+  $("ContextMenu",
+    $("ContextMenuButton",
+      $(go.TextBlock, "Undo"),
+      { click: function(e, obj) { e.diagram.commandHandler.undo(); } },
+      new go.Binding("visible", "", function(o) {
+                                        return o.diagram.commandHandler.canUndo();
+                                      }).ofObject()),
+    $("ContextMenuButton",
+      $(go.TextBlock, "Redo"),
+      { click: function(e, obj) { e.diagram.commandHandler.redo(); } },
+      new go.Binding("visible", "", function(o) {
+                                        return o.diagram.commandHandler.canRedo();
+                                      }).ofObject()),
+    // no binding, always visible button:
+  );
+        // define the Link template
+        myFullDiagram.linkTemplate =
+          $(go.Link, go.Link.Orthogonal,
+          { toShortLength: 3, relinkableFrom: true, relinkableTo: true },
+            { corner: 40 },
+            $(go.Shape, { strokeWidth: 1.5, stroke: "#141B41" },
+            new go.Binding("stroke", "colorlink")
+            ));  // the link shape
+
+
+
+      // support editing the properties of the selected person in HTML
+      if (window.Inspector) myInspector = new Inspector("myInspector", myFullDiagram,
+        {
+          properties: {
+            "key": { readOnly: true },
+            "color": {readOnly:true},
+            "type" : {readOnly: true},
+            "name": { readOnly: true },
+            "parent": { readOnly: true },
+            "colorlink": {readOnly: true},
+            "comments": {}
+          }
+        });
+
+
+////////////////////////////////////////////////////
+        myOverview =
+        $(go.Overview, "myOverviewDiv",  // the HTML DIV element for the Overview
+          { observed: myFullDiagram, contentAlignment: go.Spot.Center });
+      // Setup zoom to fit button
+      document.getElementById('zoomToFit').addEventListener('click', () => myFullDiagram.commandHandler.zoomToFit());
+
+      document.getElementById('centerRoot').addEventListener('click', () => {
+        myFullDiagram.scale = 3;
+        var node = myFullDiagram.findTreeRoots()
+        while (node.next()) {
+          keys=node.value;
+        }
+        myFullDiagram.commandHandler.scrollToPart(myFullDiagram.findNodeForKey(keys.key));
+      });
+    } // end init
+    ///////////////////////////////////////////////////
+    function searchDiagram() {  // called by button
+    var input = document.getElementById("mySearch");
+          if (!input) return;
+          myFullDiagram.focus();
+          myFullDiagram.startTransaction("highlight search");
+
+          if (input.value) {
+            // search four different data properties for the string, any of which may match for success
+            // create a case insensitive RegExp from what the user typed
+            var safe = input.value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            var regex = new RegExp(safe, "i");
+            var results = myFullDiagram.findNodesByExample({ name: regex },
+              { nation: regex },
+              { title: regex },
+              { headOf: regex });
+            myFullDiagram.highlightCollection(results);
+            myFullDiagram.scale = 4;
+
+            // try to center the diagram at the first node that was found
+            if (results.count > 0) myFullDiagram.centerRect(results.first().actualBounds);
+          } else {  // empty string only clears highlighteds collection
+            myFullDiagram.clearHighlighteds();
+          }
+
+          myFullDiagram.commitTransaction("highlight search");
+        }
+        window.addEventListener('DOMContentLoaded', init);
+//////////////////////////////////////////////////////////////////////////////
+
+        window.onload=function(){new QWebChannel(qt.webChannelTransport, function (channel) {
+            // all published objects are available in channel.objects under
+            // the identifier set in their attached WebChannel.id property
+                 fileobject =channel.objects.foo;
+                   document.body.style.backgroundColor = fileobject.backgrand;
+                   myFullDiagram.model =new go.TreeModel(fileobject.valueJson)
+                    ///////////////////////////////////////////
+                    function flattenIterator(collection) {
+                        const items = [];
+                        var it = collection.iterator;
+                        while (it.next()) {
+                          items.push(it.value);
+                        }
+
+                        return items;
+                      }
+////////////////////////////////////////////////////////////////////////////
+                     const graph = {};
+                     myFullDiagram.nodes.each(node => {
+                       graph[node.data.key] = flattenIterator(node.findNodesOutOf());
+                     });
+
+                     function getNodesLevels(diagram) {
+                       const treeLevels = {};
+
+                       var nodeIterator = diagram.nodes.iterator;
+                       while (nodeIterator.next()) {
+                         findNodeLevel(graph, nodeIterator.value, treeLevels);
+                       }
+
+                       const maxLevel = Math.max(...Object.values(treeLevels));
+
+                       return maxLevel;
+                     }
+
+                     function findNodeLevel(graph, node, levels) {
+                       const key = node.data.key;
+
+                       if (!Object.keys(levels).includes(key)) {
+                         const childNode = graph[key];
+                         if (!childNode) {
+                           levels[key] = 0
+                         } else {
+                           if (childNode.length) {
+                             const childrenLevels = childNode.map(child => findNodeLevel(graph, child, levels) + 1);
+                             levels[key] = Math.max(...childrenLevels);
+                           } else {
+                             levels[key] = 0;
+                           }
+                         }
+                       }
+
+                       return levels[key];
+                     }
+
+                      nodesLevels = getNodesLevels(myFullDiagram);
+
+
+                   /////////////////////////////////////////////
+                   myFullDiagram.findTreeRoots().each(function(n) {
+
+                    for(var i=nodesLevels;i > 1;i--){
+                    n.collapseTree(i);
+                    //n.collapseTree();
+                    }
+                     myFullDiagram.commandHandler.zoomToFit();
+                    });
+                   var element = document.getElementById("myDiagramDiv");
+                   element.style.backgroundColor = fileobject.backdigram;
+                 ///////////////////////////////////////////////////
+            });
+            };
+
+
+  </script>
+<style>
+
+#myOverviewDiv {
+      position: absolute;
+      width: 200px;
+      height: 100px;
+      top: 25px;
+      right: 25px;
+      background-color:#000000;
+      z-index: 10; /* make sure its in front */
+      border: solid 1px #7986cb;
+      border-radius:12px;
+      opacity: 0.6;
+
+    }
+
+input[type=search] {
+  width: 90%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+   border-radius:12px;
+  border: 3px solid #CBA135;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+  outline: none;
+}
+    .btton {
+        background-color:#CBA135;
+        border:none;
+        color:white;
+        padding:15px 32px;
+        text-align:Center;
+        text-decoration:none;
+        display:inline-block;
+
+        font-Size: 12px;
+        border-radius:12px;
+        transition-duration:1s
+    }
+    .btton:hover{
+        background-color:#FFFFFF;
+        color:black;
+        border:2px solid #CBA135;
+        box-shadow: 0 12px 16px 0 rgba(84,92,82,0.80),0 17px 50px 0 rgba(76,175,80,0.19)
+
+    }
+    .btton:focus {
+    border: none;
+    outline: 0;
+  }
+  .bton {
+      background-color:#CBA135;
+      border:none;
+      float:right;
+      color:white;
+      padding:15px 32px;
+      text-align:Center;
+      text-decoration:none;
+      display:inline-block;
+
+      font-Size: 12px;
+      border-radius:12px;
+      transition-duration:1s
+  }
+  .bton:hover{
+      background-color:#FFFFFF;
+      color:black;
+      border:2px solid #CBA135;
+      box-shadow: 0 12px 16px 0 rgba(84,92,82,0.80),0 17px 50px 0 rgba(76,175,80,0.19)
+
+  }
+  .bton:focus {
+  border: none;
+  outline: 0;
+}
+    .digram{
+        background-color: rgb(136, 212, 152);
+        border: 1px solid black;
+        border-radius:12px;
+        height: 570px;
+        position: relative;
+        cursor: auto;
+    }
+
+
+</style>
+<p id="nodeDataArray"></p>
+<div id="sample">
+  <div id="myDiagramDiv" class=digram></div>
+  <p><button id="zoomToFit" class=btton>Zoom to Fit</button> <button id="centerRoot" class=bton >Center on root</button></p>
+  <from><input id="mySearch" placeholder="Search.." onkeypress="if (event.keyCode === 13) searchDiagram()" type="search"></from>
+  <button class=btton onclick="searchDiagram()">Search</button>
+    <div id="myInspector" class="inspector"></div>
+ <div id="myOverviewDiv" style="cursor: auto;"><canvas tabindex="0" style="position: absolute; top: 0px; left: 0px; z-index: 2; user-select: none; touch-action: none; width: 198px; height: 98px; cursor: auto;" width="198" height="98">This text is displayed if your browser does not support the Canvas HTML element.</canvas><div style="position: absolute; overflow: auto; width: 198px; height: 98px; z-index: 1;">
+
+  </body>
+  </html>
