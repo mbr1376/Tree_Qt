@@ -15,8 +15,8 @@ MainWindow::MainWindow(QWidget *parent)
         {"colorlink","green"},
         { "color", "red" },
         {"type","1"},
-        {"name","سبزوار"},
-        {"title","CEO"},
+        {"name","radar1"},
+        {"title","Radar"},
     };
     QJsonObject o6
     {
@@ -25,8 +25,8 @@ MainWindow::MainWindow(QWidget *parent)
         {"colorlink","green"},
         { "color", "red" },
         {"type","1"},
-        {"name","مشهد"},
-        {"title","CEO"},
+        {"name","Radar2"},
+        {"title","Radar"},
         {"parent",1},
     };
     QJsonObject o2
@@ -36,8 +36,8 @@ MainWindow::MainWindow(QWidget *parent)
         { "color", "red" },
         {"colorlink","green"},
         {"type","1"},
-        {"name","نیشابور"},
-        {"title","CEO"},
+        {"name","Radar3"},
+        {"title","Radar"},
         {"parent",1},
     };
     QJsonObject o3
@@ -47,8 +47,8 @@ MainWindow::MainWindow(QWidget *parent)
         { "color", "red" },
         {"colorlink","green"},
         {"type","1"},
-        {"name","شاهرود"},
-        {"title","CEO"},
+        {"name","radar3"},
+        {"title","Radar"},
         {"parent",1},
     };
     QJsonObject o4
@@ -58,7 +58,7 @@ MainWindow::MainWindow(QWidget *parent)
         { "color", "red" },
         {"colorlink","green"},
         {"type","1"},
-        {"name","سمنان"},
+        {"name","Radar4"},
         {"title","CEO"},
         {"parent",2},
     };
@@ -69,8 +69,8 @@ MainWindow::MainWindow(QWidget *parent)
         { "color", "red" },
         {"colorlink","green"},
         {"type","1"},
-        {"name","تهران"},
-        {"title","CEO"},
+        {"name","radar5"},
+        {"title","Radar"},
         {"parent",5},
     };
     QJsonObject o7
@@ -80,8 +80,8 @@ MainWindow::MainWindow(QWidget *parent)
         { "color", "red" },
         {"colorlink","green"},
         {"type","1"},
-        {"name","تهران"},
-        {"title","CEO"},
+        {"name","radar6"},
+        {"title","Radar"},
         {"parent",5},
     };
     QJsonObject o8
@@ -91,8 +91,8 @@ MainWindow::MainWindow(QWidget *parent)
         { "color", "red" },
         {"colorlink","green"},
         {"type","1"},
-        {"name","تهران"},
-        {"title","CEO"},
+        {"name","radar7"},
+        {"title","Radar"},
         {"parent",6},
     };
     QJsonObject o9
@@ -102,8 +102,8 @@ MainWindow::MainWindow(QWidget *parent)
         { "color", "red" },
         {"colorlink","green"},
         {"type","1"},
-        {"name","تهران"},
-        {"title","CEO"},
+        {"name","radar8"},
+        {"title","Radar"},
         {"parent",8},
     };
     QJsonObject o10
@@ -113,8 +113,8 @@ MainWindow::MainWindow(QWidget *parent)
         { "color", "red" },
         {"colorlink","green"},
         {"type","1"},
-        {"name","تهران"},
-        {"title","CEO"},
+        {"name","radar9"},
+        {"title","Radar"},
         {"parent",8},
     };
     QJsonObject o11
@@ -124,8 +124,8 @@ MainWindow::MainWindow(QWidget *parent)
         { "color", "red" },
         {"colorlink","green"},
         {"type","1"},
-        {"name","تهران"},
-        {"title","CEO"},
+        {"name","Radar10"},
+        {"title","Radar"},
         {"parent",10},
     };
     QJsonObject o12
@@ -135,8 +135,8 @@ MainWindow::MainWindow(QWidget *parent)
         { "color", "red" },
         {"colorlink","green"},
         {"type","1"},
-        {"name","تهران"},
-        {"title","CEO"},
+        {"name","radar11"},
+        {"title","Radar"},
         {"parent",5},
     };
     QJsonArray arr;
