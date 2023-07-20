@@ -18,5 +18,6 @@
         <file>toastify.css</file>
         <file>toastify.js</file>
         <file>toastify-es.js</file>
+        <file>image/radar.gif</file>
     </qresource>
 </RCC>

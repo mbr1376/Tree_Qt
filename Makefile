@@ -1039,6 +1039,7 @@ qrc_Resource.cpp: Resource.qrc \
 		image/Radar7.jpg \
 		image/Radar4.jpg \
 		image/Radar6.jpg \
+		image/radar.gif \
 		image/Radar2.jpg \
 		image/Radar1.jpg
 	/home/mbr1376/Qt/6.5.0/gcc_64/libexec/rcc -name Resource --no-zstd Resource.qrc -o qrc_Resource.cpp
