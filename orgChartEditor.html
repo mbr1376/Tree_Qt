@@ -1,50 +1,151 @@
 <!--  html file display tree-->
-  <!DOCTYPE html>
-  <html lang="en">
-  <link rel="stylesheet" href="qrc:/toastify.css" />
-  <script type="text/javascript" src="qrc:/qwebchannel.js"></script>
-  <script src="qrc:/go.js"></script>
-  <script src="qrc:/jquery-3.6.0.min.js"></script>
-    <script src="qrc:/toastify.js"></script>
-    <style>
-      .beautiful-toastify {
-          padding: 5px;
-          background: #CBA135;
-          color: #FFFFFF
-          border-radius: 20px;
-          display: grid;
-          box-shadow: 0 15px 30px rgba(255,255,255,0.3);
-          grid-template-columns: 4fr 4fr;
-          border-left: 8px solid #FFFFFF;
-        animation: fade-in 1s ease-in-out;
-      }
+ <!DOCTYPE html>
+ <html lang="en">
+ <link rel="stylesheet" href="qrc:/toastify.css" />
+ <script type="text/javascript" src="qrc:/qwebchannel.js"></script>
+ <script src="qrc:/go.js"></script>
+ <script src="qrc:/jquery-3.6.0.min.js"></script>
+ <script src="qrc:/toastify.js"></script>
+<style>
+.container {
+       display: flex;
+     }
+ #myOverviewDiv {
+       position: absolute;
+       width: 200px;
+       height: 100px;
+       top: 80px;
+       left: 20px;
+       background-color:#000000;
+       z-index: 10; /* make sure its in front */
+       border: solid 1px #7986cb;
+       border-radius:12px;
+       opacity: 0.6;
 
-      @keyframes fade-in {
-        from {
-          opacity: 0;
-          transform: translateY(-20px);
-        }
-        to {
-          opacity: 0.8
-          transform: translateY(0);
-        }
-      }
-    </style>
-  <div id="allSampleContent" class="p-4 w-full">
+     }
+
+ input[type=search] {
+   width: 90%;
+   padding: 12px 20px;
+   margin: 8px 0;
+   box-sizing: border-box;
+    border-radius:12px;
+   border: 3px solid #CBA135;
+   -webkit-transition: 0.5s;
+   transition: 0.5s;
+   outline: none;
+ }
+     .btton {
+         background-color:#CBA135;
+         border:none;
+         color:white;
+         padding:15px 32px;
+         text-align:Center;
+         text-decoration:none;
+         display:inline-block;
+
+         font-Size: 12px;
+         border-radius:12px;
+         transition-duration:1s
+     }
+     .btton:hover{
+         background-color:#FFFFFF;
+         color:black;
+         border:2px solid #CBA135;
+         box-shadow: 0 12px 16px 0 rgba(84,92,82,0.80),0 17px 50px 0 rgba(76,175,80,0.19)
+
+     }
+     .btton:focus {
+     border: none;
+     outline: 0;
+   }
+   .bton {
+       background-color:#CBA135;
+       border:none;
+       color:white;
+       padding:15px 32px;
+       text-align:Center;
+       text-decoration:none;
+       display:inline-block;
+
+       font-Size: 12px;
+       border-radius:12px;
+       transition-duration:1s
+   }
+   .bton:hover{
+       background-color:#FFFFFF;
+       color:black;
+       border:2px solid #CBA135;
+       box-shadow: 0 12px 16px 0 rgba(84,92,82,0.80),0 17px 50px 0 rgba(76,175,80,0.19)
+
+   }
+   .bton:focus {
+   border: none;
+   outline: 0;
+ }
+     .digram{
+         float: left;
+         width: 75%;
+         background-color: rgb(136, 212, 152);
+         border: 1px solid black;
+         border-radius:12px;
+         height: 570px;
+         position: relative;
+         cursor: auto;
+     }
+     .logmessage{
+     float: right;
+     width: 25%;
+     background-color: "transparent";
+     border: 1px solid black;
+     border-radius:12px;
+     overflow: auto;
+     height: 570px;
+     position: relative;
+     margin-left : 5px;
+     cursor: auto;
+    }
+
+ .beautiful-toastify {
+     padding: 10px;
+     background: #BBCBA135;
+     color: #FFFFFF
+     border-radius: 30px;
+     display: grid;
+     box-shadow: 0 15px 30px rgba(255,255,255,0.3);
+     grid-template-columns: 4fr 4fr;
+     border-left: 8px solid #FFFFFF;
+   animation: fade-in 1s ease-in-out;
+ }
+ .toastify-log {
+       background-color: red;
+       color: #fff;
+       border-left: 8px solid #FFFFFF;
+       padding: 10px;
+       margin: 5px;
+       border-radius: 5px;
+       font-size: 16px;
+       font-family: Arial, sans-serif;
+     }
+ @keyframes fade-in {
+   from {
+     opacity: 0;
+     transform: translateY(-20px);
+   }
+   to {
+     opacity: 0.8
+     transform: translateY(0);
+   }
+ }
+ </style>
+ <p><button id="zoomToFit" class=btton>Zoom to Fit</button> <button id="centerRoot" class=bton >Center on root</button></p>
+
+ <div id="allSampleContent" class="p-4 w-full">
 
   <script id="code">
   //alert(backgrand)
 var fileobject;
-function showOfflineToast(txt) {
-      const toast = Toastify({
-        text: txt,
-        duration: 5000, // 5 seconds
-        close: true,
-        gravity: "top",
-        className: "beautiful-toastify", // Add the custom class to the toast
-      });
-      toast.showToast();
-    }
+
     function init() {
       // Since 2.2 you can also author concise templates with method chaining instead of GraphObject.make
       // For details, see https://gojs.net/latest/intro/buildingObjects.html
@@ -404,11 +505,21 @@ myFullDiagram.contextMenu =
                         return items;
                       }
 ////////////////////////////////////////////////////////////////////////////
-                       fileobject.update.connect(function(chKey,chColor,chColorLink){
+                        function showOfflineToast(txt) {
+                              const toast = Toastify({
+                                text: txt,
+                                duration: 5000, // 5 seconds
+                                close: true,
+                                gravity: "top",
+                                className: "beautiful-toastify", // Add the custom class to the toast
+                              });
+                              toast.showToast();
+                            }
+                           fileobject.update.connect(function(chKey,chColor,chColorLink){
                        //var results = myFullDiagram.findNodesByExample({ key: chKey });
                        const node = myFullDiagram.findNodeForKey(chKey);
                                if (node) {
-                               showOfflineToast("connection change");
+                               showOfflineToast("connection "+ node.data.name + " chnged");
                                  myFullDiagram.model.commit((m) => {
                                    const data = node.data;
                                    m.set(data, "color", chColor);
@@ -417,8 +528,19 @@ myFullDiagram.contextMenu =
                                    const data = node.data;
                                    m.set(data, "colorlink", chColorLink);
                                  }, "change colorlink");
+                                 logMessage("connection "+node.data.name + " changed")
                                }
                         });
+                        function logMessage(txt) {
+                              const logText =txt ;
+                              const toastContainer = document.getElementById("log");
+
+                              // Create a new div for the toast notification
+                              const toastDiv = document.createElement("div");
+                              toastDiv.className = "toastify-log";
+                              toastDiv.textContent = logText;
+                              toastContainer.appendChild(toastDiv);
+                            }
                      const graph = {};
                      myFullDiagram.nodes.each(node => {
                        graph[node.data.key] = flattenIterator(node.findNodesOutOf());
@@ -477,101 +599,16 @@ myFullDiagram.contextMenu =
 
 
   </script>
-<style>
-
-#myOverviewDiv {
-      position: absolute;
-      width: 200px;
-      height: 100px;
-      top: 25px;
-      right: 25px;
-      background-color:#000000;
-      z-index: 10; /* make sure its in front */
-      border: solid 1px #7986cb;
-      border-radius:12px;
-      opacity: 0.6;
-
-    }
-
-input[type=search] {
-  width: 90%;
-  padding: 12px 20px;
-  margin: 8px 0;
-  box-sizing: border-box;
-   border-radius:12px;
-  border: 3px solid #CBA135;
-  -webkit-transition: 0.5s;
-  transition: 0.5s;
-  outline: none;
-}
-    .btton {
-        background-color:#CBA135;
-        border:none;
-        color:white;
-        padding:15px 32px;
-        text-align:Center;
-        text-decoration:none;
-        display:inline-block;
-
-        font-Size: 12px;
-        border-radius:12px;
-        transition-duration:1s
-    }
-    .btton:hover{
-        background-color:#FFFFFF;
-        color:black;
-        border:2px solid #CBA135;
-        box-shadow: 0 12px 16px 0 rgba(84,92,82,0.80),0 17px 50px 0 rgba(76,175,80,0.19)
-
-    }
-    .btton:focus {
-    border: none;
-    outline: 0;
-  }
-  .bton {
-      background-color:#CBA135;
-      border:none;
-      float:right;
-      color:white;
-      padding:15px 32px;
-      text-align:Center;
-      text-decoration:none;
-      display:inline-block;
-
-      font-Size: 12px;
-      border-radius:12px;
-      transition-duration:1s
-  }
-  .bton:hover{
-      background-color:#FFFFFF;
-      color:black;
-      border:2px solid #CBA135;
-      box-shadow: 0 12px 16px 0 rgba(84,92,82,0.80),0 17px 50px 0 rgba(76,175,80,0.19)
-
-  }
-  .bton:focus {
-  border: none;
-  outline: 0;
-}
-    .digram{
-        background-color: rgb(136, 212, 152);
-        border: 1px solid black;
-        border-radius:12px;
-        height: 570px;
-        position: relative;
-        cursor: auto;
-    }
-
-
-</style>
-<p id="nodeDataArray"></p>
+</div>
 <div id="sample">
-  <div id="myDiagramDiv" class=digram></div>
-  <p><button id="zoomToFit" class=btton>Zoom to Fit</button> <button id="centerRoot" class=bton >Center on root</button></p>
+    <div class=container>
+    <div id="myOverviewDiv"></div>
+    <div id="myDiagramDiv" class=digram></div>
+    <div id=log class=logmessage></div></div>
   <from><input id="mySearch" placeholder="Search.." onkeypress="if (event.keyCode === 13) searchDiagram()" type="search"></from>
   <button class=btton onclick="searchDiagram()">Search</button>
-    <div id="myInspector" class="inspector"></div>
- <div id="myOverviewDiv" style="cursor: auto;"><canvas tabindex="0" style="position: absolute; top: 0px; left: 0px; z-index: 2; user-select: none; touch-action: none; width: 198px; height: 98px; cursor: auto;" width="198" height="98">This text is displayed if your browser does not support the Canvas HTML element.</canvas><div style="position: absolute; overflow: auto; width: 198px; height: 98px; z-index: 1;">
 
+    <div id="myInspector" class="inspector"></div>
+</div>
   </body>
   </html>
