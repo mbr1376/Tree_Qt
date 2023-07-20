@@ -6,7 +6,13 @@ import QtWebChannel 1.0
 ///main qml
 Item {
     anchors.fill: parent
-
+    Connections{
+        target: Datamanager
+        onUpdate:function(key,color,colorlink){
+            console.log(color);
+           myobject.update(key,color,colorlink);
+        }
+    }
 
     WebChannel{
         id : webChanel
@@ -15,6 +21,7 @@ Item {
     QtObject{
         id:myobject
         objectName: "myobjrct"
+        signal update(int key,string color,string colorlink)
         ///function get getparent . get childeren
             function getChilderen(array){
                 //console.log(array)

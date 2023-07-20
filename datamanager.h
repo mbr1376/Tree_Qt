@@ -21,6 +21,7 @@ private:
      QString backdigram= "red";
      QJsonValue valuejson;
      int font =8;
+
 public slots:
      /// function slot for address html and  data path
      QString htmlURL() const;
@@ -32,7 +33,8 @@ public slots:
     Q_INVOKABLE void getChildren(const QList<QString> &data);
 
 
-
+signals:
+    void update(int key, QString Color,QString colorlink);
 
 };
 

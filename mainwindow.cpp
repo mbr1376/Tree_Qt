@@ -169,11 +169,23 @@ MainWindow::MainWindow(QWidget *parent)
     qmlwidget=QWidget::createWindowContainer(view);
     /// horizontalLayout creat in ui
     ui->horizontalLayout->addWidget(qmlwidget);
+    timer= new QTimer();
+    connect(timer,&QTimer::timeout,this,&MainWindow::testsignal_update);
+    timer->setInterval(10000);
+    timer->start();
 
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::testsignal_update()
+{
+    int key = 2;
+    QString color = "black";
+    QString colorlink = "black";
+    emit d->update(key,color,colorlink);
 }
 

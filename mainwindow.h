@@ -28,5 +28,10 @@ private:
     // class widget for display qml
     QWidget *qmlwidget;
     DataManager *d;
+    QTimer *timer;
+
+private slots:
+    void testsignal_update();
+
 };
 #endif // MAINWINDOW_H
