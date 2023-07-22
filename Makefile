@@ -2151,16 +2151,27 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		../../Qt/6.5.0/gcc_64/include/QtCore/QJsonObject \
 		../../Qt/6.5.0/gcc_64/include/QtCore/qjsonobject.h \
 		ui_mainwindow.h \
-		../../Qt/6.5.0/gcc_64/include/QtCore/QVariant \
-		../../Qt/6.5.0/gcc_64/include/QtWidgets/QApplication \
-		../../Qt/6.5.0/gcc_64/include/QtWidgets/qapplication.h \
-		../../Qt/6.5.0/gcc_64/include/QtCore/qcoreapplication.h \
+		../../Qt/6.5.0/gcc_64/include/QtCore/QtCore \
+		../../Qt/6.5.0/gcc_64/include/QtCore/QtCoreDepends \
+		../../Qt/6.5.0/gcc_64/include/QtCore/q20algorithm.h \
+		../../Qt/6.5.0/gcc_64/include/QtCore/q20functional.h \
+		../../Qt/6.5.0/gcc_64/include/QtCore/q20iterator.h \
+		../../Qt/6.5.0/gcc_64/include/QtCore/q23functional.h \
+		../../Qt/6.5.0/gcc_64/include/QtCore/qabstractanimation.h \
+		../../Qt/6.5.0/gcc_64/include/QtCore/qabstracteventdispatcher.h \
 		../../Qt/6.5.0/gcc_64/include/QtCore/qeventloop.h \
+		../../Qt/6.5.0/gcc_64/include/QtCore/qabstractitemmodel.h \
+		../../Qt/6.5.0/gcc_64/include/QtCore/qabstractnativeeventfilter.h \
+		../../Qt/6.5.0/gcc_64/include/QtCore/qabstractproxymodel.h \
+		../../Qt/6.5.0/gcc_64/include/QtCore/qanimationgroup.h \
+		../../Qt/6.5.0/gcc_64/include/QtCore/qapplicationstatic.h \
+		../../Qt/6.5.0/gcc_64/include/QtCore/QMutex \
+		../../Qt/6.5.0/gcc_64/include/QtCore/qmutex.h \
+		../../Qt/6.5.0/gcc_64/include/QtCore/qtsan_impl.h \
+		../../Qt/6.5.0/gcc_64/include/QtCore/qcoreapplication.h \
 		../../Qt/6.5.0/gcc_64/include/QtCore/qcoreapplication_platform.h \
 		../../Qt/6.5.0/gcc_64/include/QtCore/qfuture.h \
 		../../Qt/6.5.0/gcc_64/include/QtCore/qfutureinterface.h \
-		../../Qt/6.5.0/gcc_64/include/QtCore/qmutex.h \
-		../../Qt/6.5.0/gcc_64/include/QtCore/qtsan_impl.h \
 		../../Qt/6.5.0/gcc_64/include/QtCore/qresultstore.h \
 		../../Qt/6.5.0/gcc_64/include/QtCore/qfuture_impl.h \
 		../../Qt/6.5.0/gcc_64/include/QtCore/qthreadpool.h \
@@ -2170,34 +2181,6 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		../../Qt/6.5.0/gcc_64/include/QtCore/qrunnable.h \
 		../../Qt/6.5.0/gcc_64/include/QtCore/qexception.h \
 		../../Qt/6.5.0/gcc_64/include/QtCore/qpromise.h \
-		../../Qt/6.5.0/gcc_64/include/QtGui/qguiapplication.h \
-		../../Qt/6.5.0/gcc_64/include/QtGui/qinputmethod.h \
-		../../Qt/6.5.0/gcc_64/include/QtGui/qguiapplication_platform.h \
-		../../Qt/6.5.0/gcc_64/include/QtWidgets/QGridLayout \
-		../../Qt/6.5.0/gcc_64/include/QtWidgets/qgridlayout.h \
-		../../Qt/6.5.0/gcc_64/include/QtWidgets/qlayout.h \
-		../../Qt/6.5.0/gcc_64/include/QtWidgets/qlayoutitem.h \
-		../../Qt/6.5.0/gcc_64/include/QtWidgets/qboxlayout.h \
-		../../Qt/6.5.0/gcc_64/include/QtWidgets/QHBoxLayout \
-		../../Qt/6.5.0/gcc_64/include/QtWidgets/QMenuBar \
-		../../Qt/6.5.0/gcc_64/include/QtWidgets/qmenubar.h \
-		../../Qt/6.5.0/gcc_64/include/QtWidgets/qmenu.h \
-		../../Qt/6.5.0/gcc_64/include/QtWidgets/QStatusBar \
-		../../Qt/6.5.0/gcc_64/include/QtWidgets/qstatusbar.h \
-		../../Qt/6.5.0/gcc_64/include/QtCore/QtCore \
-		../../Qt/6.5.0/gcc_64/include/QtCore/QtCoreDepends \
-		../../Qt/6.5.0/gcc_64/include/QtCore/q20algorithm.h \
-		../../Qt/6.5.0/gcc_64/include/QtCore/q20functional.h \
-		../../Qt/6.5.0/gcc_64/include/QtCore/q20iterator.h \
-		../../Qt/6.5.0/gcc_64/include/QtCore/q23functional.h \
-		../../Qt/6.5.0/gcc_64/include/QtCore/qabstractanimation.h \
-		../../Qt/6.5.0/gcc_64/include/QtCore/qabstracteventdispatcher.h \
-		../../Qt/6.5.0/gcc_64/include/QtCore/qabstractitemmodel.h \
-		../../Qt/6.5.0/gcc_64/include/QtCore/qabstractnativeeventfilter.h \
-		../../Qt/6.5.0/gcc_64/include/QtCore/qabstractproxymodel.h \
-		../../Qt/6.5.0/gcc_64/include/QtCore/qanimationgroup.h \
-		../../Qt/6.5.0/gcc_64/include/QtCore/qapplicationstatic.h \
-		../../Qt/6.5.0/gcc_64/include/QtCore/QMutex \
 		../../Qt/6.5.0/gcc_64/include/QtCore/qassociativeiterable.h \
 		../../Qt/6.5.0/gcc_64/include/QtCore/qbasictimer.h \
 		../../Qt/6.5.0/gcc_64/include/QtCore/qbitarray.h \
@@ -2285,6 +2268,7 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		../../Qt/6.5.0/gcc_64/include/QtCore/qurlquery.h \
 		../../Qt/6.5.0/gcc_64/include/QtCore/qvarianthash.h \
 		../../Qt/6.5.0/gcc_64/include/QtCore/QHash \
+		../../Qt/6.5.0/gcc_64/include/QtCore/QVariant \
 		../../Qt/6.5.0/gcc_64/include/QtCore/QString \
 		../../Qt/6.5.0/gcc_64/include/QtCore/qvariantlist.h \
 		../../Qt/6.5.0/gcc_64/include/QtCore/qvariantmap.h \

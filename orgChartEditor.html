@@ -7,15 +7,23 @@
  <script src="qrc:/jquery-3.6.0.min.js"></script>
  <script src="qrc:/toastify.js"></script>
 <style>
+.continer_object{
+    text-align: center;
+}
 .container {
-       display: flex;
+  position: absolute;
+      top: 50px;
+      left: 0;
+      width: 99%;
+      height: 90%;
+      margin:5px;
      }
  #myOverviewDiv {
        position: absolute;
        width: 200px;
        height: 100px;
-       top: 80px;
-       left: 20px;
+       top: 60px;
+       left: 10px;
        background-color:#000000;
        z-index: 10; /* make sure its in front */
        border: solid 1px #7986cb;
@@ -25,8 +33,8 @@
      }
 
  input[type=search] {
-   width: 90%;
-   padding: 12px 20px;
+   width: 300px;
+   padding: 6px 10px;
    margin: 8px 0;
    box-sizing: border-box;
     border-radius:12px;
@@ -34,6 +42,8 @@
    -webkit-transition: 0.5s;
    transition: 0.5s;
    outline: none;
+   display:inline-block;
+
  }
      .btton {
          background-color:#CBA135;
@@ -43,10 +53,10 @@
          text-align:Center;
          text-decoration:none;
          display:inline-block;
-
+         float:left;
          font-Size: 12px;
          border-radius:12px;
-         transition-duration:1s
+         transition-duration:1s;
      }
      .btton:hover{
          background-color:#FFFFFF;
@@ -59,67 +69,64 @@
      border: none;
      outline: 0;
    }
-   .bton {
-       background-color:#CBA135;
-       border:none;
-       color:white;
-       padding:15px 32px;
-       text-align:Center;
-       text-decoration:none;
-       display:inline-block;
-
-       font-Size: 12px;
-       border-radius:12px;
-       transition-duration:1s
-   }
-   .bton:hover{
-       background-color:#FFFFFF;
-       color:black;
-       border:2px solid #CBA135;
-       box-shadow: 0 12px 16px 0 rgba(84,92,82,0.80),0 17px 50px 0 rgba(76,175,80,0.19)
-
-   }
-   .bton:focus {
-   border: none;
-   outline: 0;
- }
      .digram{
-         float: left;
-         width: 75%;
+         width: 100%;
+         height: 74%;
          background-color: rgb(136, 212, 152);
          border: 1px solid black;
          border-radius:12px;
-         height: 570px;
-         position: relative;
-         cursor: auto;
+         overflow: auto;
      }
+     .digram::-webkit-scrollbar {
+           width: 5px; /* Adjust scrollbar width */
+         }
+
+         .digram::-webkit-scrollbar-thumb {
+           background-color: #000; /* Scrollbar thumb color */
+           border-radius: 4px; /* Round the scrollbar thumb */
+         }
+
+         .digram::-webkit-scrollbar-thumb:hover {
+           background-color: #000000; /* Scrollbar thumb color on hover */
+         }
      .logmessage{
-     float: right;
-     width: 25%;
+     width: 100%;
      background-color: "transparent";
      border: 1px solid black;
      border-radius:12px;
      overflow: auto;
-     height: 570px;
-     position: relative;
-     margin-left : 5px;
-     cursor: auto;
+     height: 25%;
+     position: absolute;
+     bottom: 0;
     }
+    .logmessage::-webkit-scrollbar {
+          width: 8px; /* Adjust scrollbar width */
+          margin-right:3px;
+        }
 
+        .logmessage::-webkit-scrollbar-thumb {
+          background-color: #BBCBA135; /* Scrollbar thumb color */
+          border-radius: 4px; /* Round the scrollbar thumb */
+        }
+
+        .logmessage::-webkit-scrollbar-thumb:hover {
+          background-color: #CBA135; /* Scrollbar thumb color on hover */
+        }
  .beautiful-toastify {
-     padding: 10px;
+     padding-top: 10px;
      background: #BBCBA135;
-     color: #FFFFFF
-     border-radius: 30px;
-     display: grid;
+     color: #FFFFFF;
+     width:250px;
+     border-radius: 10px;
+     display:inline-block ;
      box-shadow: 0 15px 30px rgba(255,255,255,0.3);
-     grid-template-columns: 4fr 4fr;
      border-left: 8px solid #FFFFFF;
    animation: fade-in 1s ease-in-out;
  }
  .toastify-log {
        background-color: red;
        color: #fff;
+       width:50%;
        border-left: 8px solid #FFFFFF;
        padding: 10px;
        margin: 5px;
@@ -133,13 +140,16 @@
      transform: translateY(-20px);
    }
    to {
-     opacity: 0.8
+     opacity: 0.8;
      transform: translateY(0);
    }
  }
  </style>
- <p><button id="zoomToFit" class=btton>Zoom to Fit</button> <button id="centerRoot" class=bton >Center on root</button></p>
-
+ <div class="continer_object">
+ <button id="zoomToFit" class=btton>Zoom to Fit</button> <button id="centerRoot" class=btton >Center on root</button>
+ <from><input id="mySearch" placeholder="Search.." onkeypress="if (event.keyCode === 13) searchDiagram()" type="search"></from>
+ <!--<button class=btton onclick="searchDiagram()">Search</button>-->
+ </div>
  <div id="allSampleContent" class="p-4 w-full">
 
   <script id="code">
@@ -601,12 +611,13 @@ myFullDiagram.contextMenu =
   </script>
 </div>
 <div id="sample">
+<div id="myOverviewDiv"></div>
+
     <div class=container>
-    <div id="myOverviewDiv"></div>
     <div id="myDiagramDiv" class=digram></div>
-    <div id=log class=logmessage></div></div>
-  <from><input id="mySearch" placeholder="Search.." onkeypress="if (event.keyCode === 13) searchDiagram()" type="search"></from>
-  <button class=btton onclick="searchDiagram()">Search</button>
+    <div id=log class=logmessage></div>
+    </div>
+
 
     <div id="myInspector" class="inspector"></div>
 </div>
