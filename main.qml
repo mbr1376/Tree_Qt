@@ -1,6 +1,6 @@
 import QtQuick 2.13
 import QtQuick.Window 2.13
-import QtWebView 1.1
+//import QtWebView 1.1
 import QtWebEngine 1.10
 import QtWebChannel 1.0
 ///main qml
@@ -48,8 +48,11 @@ Item {
             anchors.fill:parent
                url: Datamanager.htmlURL()
             webChannel: webChanel
-
-
+            onLoadingChanged: function(req) {
+                    console.log("status:", req.status)
+                    console.log("url:", req.url)
+                    console.log("error:", req.errorCode, req.errorString)
+                }
         }
     }
     ///end
